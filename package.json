@@ -2,7 +2,7 @@
   "name": "Admin",
   "version": "1.0.0",
   "description": "Admin Panel - Alfredo",
-  "author": "DeVoresyah ArEst",
+  "author": "Edo Rahayu",
   "private": true,
   "scripts": {
     "dev": "nuxt --port 3000",
