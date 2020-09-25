@@ -1,6 +1,6 @@
 # admin-alfredo
 
-> Admin Panel - Alfredo
+> Admin Panel - Edo Rahayu
 
 ## Build Setup
 
