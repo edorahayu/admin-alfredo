@@ -110,6 +110,106 @@ export default {
 }
 </script>
 
+<script>
+import moment from 'moment'
+import TextUtil from '../../lib/TextUtil'
+import { ValidationProvider, ValidationObserver, extend } from 'vee-validate'
+import { required } from 'vee-validate/dist/rules'
+import { mapState, mapActions } from 'vuex'
+
+extend('required', {
+  ...required,
+  message: `This field is required.`
+})
+
+export default {
+    middleware: 'category/index',
+    head() {
+        title: 'Add Product - Admin'
+    },
+    components: {
+        ValidationProvider,
+        ValidationObserver
+    },
+    data() {
+        return {
+            title: '',
+            price: '',
+            desc: '',
+            stock: '',
+            category: '',
+            imgPreview: '',
+            thumbnail: null,
+            errorThumbnail: ''
+        }
+    },
+    computed: {
+        priceChange: {
+            get() {
+                return this.price
+            },
+            set(value) {
+                const regex = /^[0-9\.]*$/g
+                this.price = regex.test(value) ? this.formatIdr(value) : ""
+            }
+        },
+        ...mapState({
+            addStatus: state => state.product.doAdd,
+            categories: state => state.category.list
+        })
+    },
+    methods: {
+        formatDate: (date) => moment(new Date(date)).format('YYYY/MM/DD'),
+        formatIdr: (int) => new TextUtil().formatMoney(int),
+        moneyToInt: (int) => new TextUtil().moneytoInt(int),
+        onFileChange(e) {
+            const files = e.target.files || e.dataTransfer.files;
+            if (!files.length)
+                return;
+            this.thumbnail = files[0]
+            this.createImage(files[0])
+            this.errorThumbnail = ""
+        },
+        createImage(file) {
+            const image = new Image()
+            const reader = new FileReader()
+            const vm = this
+
+            reader.onload = (e) => {
+                vm.imgPreview = e.target.result
+            };
+            reader.readAsDataURL(file)
+        },
+        removeImage(e) {
+            this.imgPreview = ''
+            this.thumbnail = null
+        },
+        onSubmit() {
+            const { title, price, desc, stock, category, thumbnail } = this
+
+            if (!this.thumbnail) {
+                this.errorThumbnail = "Please select thumbnail product"
+                return false
+            }
+
+            const dataToSend = new FormData()
+            dataToSend.append("thumbnail[thumbnail]", thumbnail)
+            dataToSend.append("price", this.moneyToInt(price))
+            dataToSend.append("title", title)
+            dataToSend.append("desc", desc)
+            dataToSend.append("stock", stock)
+            dataToSend.append("category", category)
+
+            this.addProduct(dataToSend)
+        },
+        ...mapActions({
+            addProduct: 'product/addProduct'
+        })
+    }
+}
+</script>
+// hacktoberfest
+
 <style>
 
 </style>
