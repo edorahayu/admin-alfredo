@@ -58,6 +58,18 @@ export default {
                 toast.addEventListener('mouseleave', Swal.resumeTimer)
             }
         })
+        
+       const actions = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            onOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+        })
 
         if (response.ok) {
             commit('getStatusConfirmationSuccess', response.data.data)
