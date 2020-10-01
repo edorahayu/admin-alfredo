@@ -144,6 +144,7 @@
 import moment from 'moment'
 import TextUtil from '../lib/TextUtil'
 import { mapState, mapActions } from 'vuex'
+import { axios, mapActions } from 'axios'
 
 export default {
   middleware: 'dashboard',
